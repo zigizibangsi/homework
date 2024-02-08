@@ -5,42 +5,420 @@
 // ======================================================================
 
 1) 철수의 나이는 몇살인가요?(나이만 조회해 주세요.)
+query {
+  fetchProfile(name:"철수")
+  {age}
+}
+
 // 12살
+
 2) 영희의 학교는 어디인가요?(학교만 조회해 주세요.)
+query {
+  fetchProfile(name:"영희")
+  {school}
+}
+
 // 회원초등학교
+
 3) 3번 게시글의 내용과 작성일이 무엇인가요?(내용과 작성일만 조회해 주세요.)
+query {
+  fetchBoard(number:3)
+  {contents, createdAt}
+}
+
 // null
+
 4) 본인의 이름으로 프로필을 작성해 보세요.
-// 
+mutation {
+  createProfile(name : "숙희", age: 28, school: "흑석초등학교")
+  {number, message}
+}  
+
+// "프로필이 정상적으로 등록되었습니다."
+
 5) 본인의 이름으로 게시글을 작성해 보세요.
+mutation {
+  createBoard(writer : "숙희", title: "안녕", contents: "안녕하세요")
+  {number message}
+}
+
+// {
+  "data": {
+    "createBoard": {
+      "number": 21734,
+      "message": "게시물이 정상적으로 등록되었습니다."
+    }
+  }
+}
 
 6) 자신의 프로필을 조회해 보세요.
+query{
+  fetchProfile(name:"숙희")
+{name, school, age}
+}
+
+// {
+  "data": {
+    "fetchProfile": {
+      "name": "숙희",
+      "school": "흑석초등학교",
+      "age": 28
+    }
+  }
+}
 
 7) 자신의 게시글을 조회해 보세요.
+query{
+  fetchBoard(number:21734)
+  {writer,title,contents}
+}
+
+// {
+  "data": {
+    "fetchBoard": {
+      "writer": "숙희",
+      "title": "안녕",
+      "contents": "안녕하세요"
+    }
+  }
+}
 
 8) 본인의 프로필에서, 학교를 자신이 졸업한 초등학교로 바꿔보세요.
+mutation{
+  updateProfile(name:"숙희",age:28,school:"반포초등학교")
+  {number,message}
+}
+
+// {
+  "data": {
+    "updateProfile": {
+      "number": null,
+      "message": "프로필이 정상적으로 수정되었습니다."
+    }
+  }
+}
 
 9) 본인의 게시글에서, 제목과 내용을 바꿔보세요.
+mutation{
+  updateBoard(number:21734, title: "수정", contents: "수정했습니다")
+  {number,message}
+}
+
+// {
+  "data": {
+    "updateBoard": {
+      "number": 21734,
+      "message": "게시물이 정상적으로 수정되었습니다."
+    }
+  }
+}
 
 10) 자신이 좋아하는 만화 주인공으로 프로필을 작성해 보세요.
+mutation {
+  createProfile(name : "짱구", age: 28, school: "흑석초등학교")
+  {number, message}
+}
+
+// {
+  "data": {
+    "createProfile": {
+      "number": null,
+      "message": "프로필이 정상적으로 등록되었습니다."
+    }
+  }
+}
 
 11) 위 10번에서 작성한 프로필을 삭제해 보세요.
+mutation {
+  deleteProfile(name : "짱구")
+  {message}
+}  
+
+// {
+  "data": {
+    "deleteProfile": {
+      "message": "프로필이 정상적으로 삭제되었습니다."
+    }
+  }
+}
 
 12) 상품을 하나 만들어 보세요.
+mutation {
+  createProduct(seller : "짱구", createProductInput:{name: "마우스", detail: "좋은 마우스", price: 1000})
+  {_id, number, message}
+} 
+
+// {
+  "data": {
+    "createProduct": {
+      "_id": "1aca2b4e-bd67-45af-ab46-6a6b70f24918",
+      "number": null,
+      "message": "상품이 정상적으로 등록되었습니다."
+    }
+  }
+}
 
 13) 위 12번에서 만들었던 상품의 가격을 500원 인상해 보세요.
+mutation {
+  updateProduct(productId: "1aca2b4e-bd67-45af-ab46-6a6b70f24918", updateProductInput:{name: "마우스", detail: "좋은 마우스", price: 1500})
+  {_id, number, message}
+}
+
+// {
+  "data": {
+    "updateProduct": {
+      "_id": "1aca2b4e-bd67-45af-ab46-6a6b70f24918",
+      "number": null,
+      "message": "상품이 정상적으로 수정되었습니다."
+    }
+  }
+}
 
 14) 위에서 만든 상품을 조회하되, 가격만 조회해 보세요.
+query{
+  fetchProduct(productId:"1aca2b4e-bd67-45af-ab46-6a6b70f24918")
+  {price}
+}
+
+// {
+  "data": {
+    "fetchProduct": {
+      "price": 1500
+    }
+  }
+}
 
 15) 조회했던 상품을 삭제해 보세요.
+mutation{
+  deleteProduct(productId:"1aca2b4e-bd67-45af-ab46-6a6b70f24918")
+  {number, message}
+}
+
+// {
+  "data": {
+    "deleteProduct": {
+      "number": null,
+      "message": "상품이 정상적으로 삭제되었습니다."
+    }
+  }
+}
 
 16) 삭제한 상품이 정말로 삭제되었는지 다시 한번 조회해 보세요.
+query{
+  fetchProduct(productId:"1aca2b4e-bd67-45af-ab46-6a6b70f24918")
+  {price}
+}
+
+// {
+  "data": {
+    "fetchProduct": null
+  }
+}
 
 17) 게시물 목록 중, 2페이지를 조회해 보세요.
+query{
+  fetchBoards(page:2)
+  {number, writer, title, contents, like, createdAt}
+}
+// {
+  "data": {
+    "fetchBoards": [
+      {
+        "number": 21723,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:10:00.007Z"
+      },
+      {
+        "number": 21722,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:09:45.393Z"
+      },
+      {
+        "number": 21721,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:04:41.796Z"
+      },
+      {
+        "number": 21720,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:04:32.634Z"
+      },
+      {
+        "number": 21719,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:04:06.170Z"
+      },
+      {
+        "number": 21718,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:03:31.351Z"
+      },
+      {
+        "number": 21717,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:02:55.313Z"
+      },
+      {
+        "number": 21716,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:02:48.157Z"
+      },
+      {
+        "number": 21715,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T11:00:40.080Z"
+      },
+      {
+        "number": 21714,
+        "writer": "준재",
+        "title": "가입인사",
+        "contents": "반갑습니다. 잘부탁드립니다!",
+        "like": 0,
+        "createdAt": "2024-02-07T10:55:13.884Z"
+      }
+    ]
+  }
+}
 
 18) 게시물 목록을 조회할 때, page를 입력하지 않으면, 어떤 결과가 발생하는지 확인해 보세요.
 		(Hint : syntax error는 아닙니다.)
+query{
+  fetchBoards
+  {number, writer, title, contents, like, createdAt}
+}
+
+// {
+  "data": {
+    "fetchBoards": [
+      {
+        "number": 21735,
+        "writer": "철수",
+        "title": "안녕",
+        "contents": "반갑습니다",
+        "like": 0,
+        "createdAt": "2024-02-08T06:21:07.866Z"
+      },
+      {
+        "number": 21734,
+        "writer": "숙희",
+        "title": "수정",
+        "contents": "수정했습니다",
+        "like": 0,
+        "createdAt": "2024-02-08T06:01:03.049Z"
+      },
+      {
+        "number": 21733,
+        "writer": "숙희",
+        "title": "안녕",
+        "contents": "안녕하세요",
+        "like": 0,
+        "createdAt": "2024-02-08T05:52:57.441Z"
+      },
+      {
+        "number": 21732,
+        "writer": "hyunn",
+        "title": "titleTest",
+        "contents": "contentTest",
+        "like": 0,
+        "createdAt": "2024-02-08T05:18:20.139Z"
+      },
+      {
+        "number": 21731,
+        "writer": "tom",
+        "title": "play",
+        "contents": "new world",
+        "like": 0,
+        "createdAt": "2024-02-07T16:10:55.237Z"
+      },
+      {
+        "number": 21730,
+        "writer": "임영효",
+        "title": "270000aaa",
+        "contents": "000dkdkdkdk",
+        "like": 0,
+        "createdAt": "2024-02-07T14:19:28.855Z"
+      },
+      {
+        "number": 21728,
+        "writer": "박병태",
+        "title": "반가워유",
+        "contents": "잘부탁해유",
+        "like": 0,
+        "createdAt": "2024-02-07T11:33:17.062Z"
+      },
+      {
+        "number": 21727,
+        "writer": "",
+        "title": "",
+        "contents": "",
+        "like": 0,
+        "createdAt": "2024-02-07T11:32:48.462Z"
+      },
+      {
+        "number": 21726,
+        "writer": "지지직",
+        "title": "치지지직",
+        "contents": "픽",
+        "like": 0,
+        "createdAt": "2024-02-07T11:19:26.234Z"
+      },
+      {
+        "number": 21725,
+        "writer": "지지직",
+        "title": "치지지직",
+        "contents": "픽",
+        "like": 0,
+        "createdAt": "2024-02-07T11:18:14.828Z"
+      }
+    ]
+  }
+} // 최신 기준으로 나온다.
 
 19) 프로필이 전체 몇 개가 있는지 확인해 보세요.
+query{
+  fetchProfilesCount
+}
+
+// {
+  "data": {
+    "fetchProfilesCount": 957
+  }
+}
 
 20) 게시물은 몇 개가 있는지 조회해보세요.
+query{
+  fetchBoardsCount
+}
+
+// {
+  "data": {
+    "fetchBoardsCount": 987
+  }
+}

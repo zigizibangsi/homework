@@ -1,0 +1,267 @@
+// =====================================================================
+// graphql-API 문제
+// =====================================================================
+// http://backend-practice.codebootcamp.co.kr/graphql  에서 제공하는 API를 사용하세요.
+// =====================================================================
+
+1) createBoard를 활용해, 게시물을 하나 등록해 주세요.
+mutation{
+  createBoard(createBoardInput:{writer:"짱구",password:"1234",title:"등록", contents:"등록해요",images:["1234"]})
+  {_id}
+}
+
+// {
+  "data": {
+    "createBoard": {
+      "_id": "65c475575d6eaa0029f7dd71"
+    }
+  }
+}
+
+2) 등록한 게시글의 제목과 내용은 무엇인가요?
+query{
+  fetchBoard(boardId: "65c475575d6eaa0029f7dd71")
+  {title, contents}
+}
+
+// {
+  "data": {
+    "fetchBoard": {
+      "title": "등록",
+      "contents": "등록해요"
+    }
+  }
+}
+
+3) 등록한 게시글에 좋아요를 1 올려주세요.
+mutation{
+  likeBoard(boardId: "65c475575d6eaa0029f7dd71")
+}
+
+// {
+  "data": {
+    "likeBoard": 1
+  }
+}
+
+4) 등록한 게시글에 싫어요도 1 올려주세요.
+mutation{
+  dislikeBoard(boardId: "65c475575d6eaa0029f7dd71")
+}
+
+// {
+  "data": {
+    "dislikeBoard": 1
+  }
+}
+
+5) 등록한 게시글의 좋아요와 싫어요는 각각 몇 개 인가요? 
+	(fetchBoard를 활용해서 확인해 보세요.)
+query{
+  fetchBoard(boardId: "65c475575d6eaa0029f7dd71")
+  {likeCount, dislikeCount}
+}
+
+// {
+  "data": {
+    "fetchBoard": {
+      "likeCount": 1,
+      "dislikeCount": 1
+    }
+  }
+}
+
+6) 현재 등록된 게시글의 총 갯수는 몇 개 인가요? 
+	(어떤 API를 활용하면 좋을지 찾아보세요!)
+query{
+  fetchBoardsCount
+}
+
+// {
+  "data": {
+    "fetchBoardsCount": 13156
+  }
+}
+
+7) 등록한 게시글의 제목을 수정해 보세요!
+mutation{
+  updateBoard(updateBoardInput:{title: "수정하세요"},password:"1234",boardId: "65c475575d6eaa0029f7dd71")
+  {title}
+}
+
+// {
+  "data": {
+    "updateBoard": {
+      "title": "수정하세요"
+    }
+  }
+}
+
+8) fetchBoards 전체 게시물 조회를 활용하여 방금 쓴 게시물을 검색해 보세요.
+	(search 변수를 활용해요!)
+query {
+  fetchBoards(search:"수정하세요")
+  {writer}
+}
+
+// {
+  "data": {
+    "fetchBoards": [
+      {
+        "writer": "짱구"
+      }
+    ]
+  }
+}
+
+9) 등록한 게시글에 댓글을 3개 추가해 보세요.
+mutation{
+  createBoardComment(createBoardCommentInput:{contents: "좋아요3", rating: 10},
+  boardId: "65c475575d6eaa0029f7dd71")
+  {_id}
+}
+
+//{
+  "data": {
+    "createBoardComment": {
+      "_id": "65c47c295d6eaa0029f7dd77"
+    }
+  }
+}
+
+mutation{
+  createBoardComment(createBoardCommentInput:{contents: "좋아요2", rating: 10},
+  boardId: "65c475575d6eaa0029f7dd71")
+  {_id}
+}
+
+// {
+  "data": {
+    "createBoardComment": {
+      "_id": "65c47c545d6eaa0029f7dd78"
+    }
+  }
+}
+
+mutation{
+  createBoardComment(createBoardCommentInput:{contents: "좋아요1", rating: 10},
+  boardId: "65c475575d6eaa0029f7dd71")
+  {_id}
+}
+
+// {
+  "data": {
+    "createBoardComment": {
+      "_id": "65c47c6a5d6eaa0029f7dd79"
+    }
+  }
+}
+
+10) 첫번째 댓글의 내용을 수정해 보세요!
+mutation{
+  updateBoardComment(updateBoardCommentInput:{contents: "좋아요11"}, boardCommentId: "65c47c295d6eaa0029f7dd77")
+  {contents}
+}
+
+// {
+  "data": {
+    "updateBoardComment": {
+      "contents": "좋아요11"
+    }
+  }
+}
+
+11) 두번째 댓글을 삭제해 보세요!
+mutation{
+  deleteBoardComment(boardCommentId:"65c47c545d6eaa0029f7dd78")
+}
+
+// {
+  "data": {
+    "deleteBoardComment": "65c47c545d6eaa0029f7dd78"
+  }
+}
+
+12) 등록한 게시글에 달려있는 모든 댓글을 조회해 보세요.(작성자와 내용만 조회합니다.)
+query {
+  fetchBoardComments(boardId:"65c475575d6eaa0029f7dd71")
+  {writer, contents}
+}
+
+// {
+  "data": {
+    "fetchBoardComments": [
+      {
+        "writer": null,
+        "contents": "좋아요1"
+      },
+      {
+        "writer": null,
+        "contents": "좋아요11"
+      },
+      {
+        "writer": null,
+        "contents": "좋아요3"
+      },
+      {
+        "writer": null,
+        "contents": "좋아요2"
+      },
+      {
+        "writer": null,
+        "contents": "좋아요1"
+      }
+    ]
+  }
+}
+
+13) BEST 게시글을 조회해 보세요! (API 이름을 잘 찾아보세요!)
+query {
+  fetchBoardsOfTheBest
+  {_id, writer, title, contents}
+}
+
+// {
+  "data": {
+    "fetchBoardsOfTheBest": [
+      {
+        "_id": "655cd14a5d6eaa0029f7cb13",
+        "writer": "이상혁",
+        "title": "페이커 그는 신인가? 믿고 있었습니다 GOAT! 제목 길이 어디까지 되나 테스트 제목 길이 어디까지 되나 테스트 제목 길이 어디까지 되나 테스트",
+        "contents": "대상혁"
+      },
+      {
+        "_id": "64bfabb15d6eaa0029f77acc",
+        "writer": "쯔양",
+        "title": "오늘 저녁 메뉴 추천해주세요",
+        "contents": "<h1><strong>배고파용 </strong></h1><h1><strong>메뉴추천 댓글 고고</strong></h1>"
+      },
+      {
+        "_id": "658158b15d6eaa0029f7d296",
+        "writer": "작성자",
+        "title": "지금부터 여기는 맨체스터 유나이티드 갤러리다 ",
+        "contents": "<h1><strong>지금부터 여기는 </strong><strong style=\"background-color: rgb(0, 0, 0); color: rgb(255, 255, 0);\">맨체스터 유나이티드</strong><strong> 갤러리다</strong></h1>"
+      },
+      {
+        "_id": "64ca0ced5d6eaa0029f77e12",
+        "writer": "우마",
+        "title": "굳데이 유튭~!",
+        "contents": "우맙니다"
+      }
+    ]
+  }
+}
+
+14) 회원가입을 해보세요! 사용자, 즉 User를 만드는 API입니다!
+mutation {
+  createUser(createUserInput:{email: "aa@naver.com", password: "1234", name:"짱구"})
+  {_id}
+}
+
+// {
+  "data": {
+    "createUser": {
+      "_id": "65c47f5b5d6eaa0029f7dd7a"
+    }
+  }
+}
